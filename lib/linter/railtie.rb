@@ -1,4 +1,4 @@
-module Mas
+module Linter
   class Railtie < ::Rails::Engine
     rake_tasks do |app|
       Mas::Lint::Task.new app

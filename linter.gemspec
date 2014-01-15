@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'mas/lint/version'
+require 'linter/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "mas-lint"
-  spec.version       = Mas::Lint::VERSION
-  spec.authors       = ["Yann"]
-  spec.email         = ["yann.marquet@moneyadviceservice.org.uk"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.name          = "linter"
+  spec.version       = Linter::VERSION
+  spec.authors       = ["StupidCodeFactory"]
+  spec.email         = ["ymarquet@gmail.com"]
+  spec.description   = %q{Programmatically lint your css and js files}
+  spec.summary       = %q{linter gems aims at providing a comviniante way of using JSLint and CSSLint from within your ruby application}
+  spec.homepage      = "https://github.com/moneyadviceservice/lint"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "sprockets-rails"
   spec.add_dependency "execcsslint"
   spec.add_dependency "execjslint"
   spec.add_dependency "rails"

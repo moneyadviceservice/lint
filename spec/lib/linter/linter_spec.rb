@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mas::Lint::Linter do
+describe Linter::Lint do
 
   let(:linter_yml) { YAML.load_file('spec/fixtures/linter.yml') }
 
@@ -11,14 +11,14 @@ describe Mas::Lint::Linter do
       let(:js_file) { File.open('spec/fixtures/valid_with_options.js') }
 
       it 'configures JSLint properly' do
-        expect(Mas::Lint::Linter.new(js_file, linter_yml)).to be_valid
+        expect(Linter::Lint.new(js_file, linter_yml)).to be_valid
       end
 
     end
 
     describe 'When no linting errors are detected' do
 
-      let(:linter) { Mas::Lint::Linter.new(js_file) }
+      let(:linter) { Linter::Lint.new(js_file) }
       let(:js_file) { File.open('spec/fixtures/valid.js') }
 
       it 'runs the JSLint linter' do
@@ -38,7 +38,7 @@ describe Mas::Lint::Linter do
 
     describe 'When linting errors are detected' do
 
-      let(:linter) { Mas::Lint::Linter.new(js_file) }
+      let(:linter) { Linter::Lint.new(js_file) }
       let(:js_file) { File.open('spec/fixtures/errors.js') }
 
       it 'is not valid' do
@@ -59,14 +59,14 @@ describe Mas::Lint::Linter do
       let(:css_file) { File.open('spec/fixtures/valid_with_options.css') }
 
       it 'configures CSSLint properly' do
-        expect(Mas::Lint::Linter.new(css_file, linter_yml)).to be_valid
+        expect(Linter::Lint.new(css_file, linter_yml)).to be_valid
       end
 
     end
 
     describe 'When no linting errors are detected' do
 
-      let(:linter) { Mas::Lint::Linter.new(css_file) }
+      let(:linter) { Linter::Lint.new(css_file) }
       let(:css_file) { File.open('spec/fixtures/valid.css') }
 
       it 'runs the CSSLint linter' do
@@ -87,7 +87,7 @@ describe Mas::Lint::Linter do
 
     describe 'When linting errors are detected' do
 
-      let(:linter) { Mas::Lint::Linter.new(css_file) }
+      let(:linter) { Linter::Lint.new(css_file) }
       let(:css_file) { File.open('spec/fixtures/errors.css') }
 
       it 'is not valid' do

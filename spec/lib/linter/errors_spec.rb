@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Mas::Lint::Errors do
-  let(:parser)   { Mas::Lint::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
-  let(:formater) { Mas::Lint::CssErrorFormater.new }
-  let(:errors)   { Mas::Lint::Errors.new(parser, formater) }
+describe Linter::Errors do
+  let(:parser)   { Linter::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
+  let(:formater) { Linter::CssErrorFormater.new }
+  let(:errors)   { Linter::Errors.new(parser, formater) }
   let(:raw_errors) do
     [
       {

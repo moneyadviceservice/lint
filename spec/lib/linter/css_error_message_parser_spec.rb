@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Mas::Lint::CssErrorMessageParser do
-  let(:parser) { Mas::Lint::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
+describe Linter::CssErrorMessageParser do
+  let(:parser) { Linter::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
   let(:raw_error) do
     {
       "type"    => "warning",
