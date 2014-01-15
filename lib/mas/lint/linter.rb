@@ -4,8 +4,17 @@ module Mas
 
       attr_reader :file
 
-      def initialize(file)
+      def initialize(file, options = {})
         @file = file
+        @options = if file_extension == 'css'
+          opts = {}
+          opts['errors']   = options['errors'].join(',')   if options.key?('errors')
+          opts['warnings'] = options['warnings'].join(',') if options.key?('warnings')
+          opts['ignore']   = options['ignore'].join(',')   if options.key?('ignore')
+          opts
+        else
+          options[file_extension] || {}
+        end
       end
 
       def valid?
@@ -19,9 +28,11 @@ module Mas
 
       private
 
+      attr_reader :options
+
       def run!
         file.rewind
-        result = linter.context.call(linter_function, file.read, {})
+        result = linter.context.call(linter_function, file.read, options)
         errors.parse!(result.last)
       end
 

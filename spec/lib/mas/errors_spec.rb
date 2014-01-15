@@ -46,6 +46,13 @@ describe Mas::Lint::Errors do
       errors.parse!(raw_errors)
       expect(errors.full_messages).not_to be_empty
     end
+
+    describe "When warnings are also returned by the linter" do
+      it 'does not include the warnings' do
+        errors.parse!(raw_errors)
+        expect(errors.full_messages).to eq(["/Users/ymarquet/moneyadvice/mas-lint/spec/fixtures/errors.css:2:11\n\t    width:;\nError: Unexpected token ';' at line 2, col 11.\nHint: This rule looks for recoverable syntax errors.\nAffected browsers: All"])
+      end
+    end
   end
 
 end

@@ -32,7 +32,7 @@ module Mas
       end
 
       def _errors
-        @_errors
+        @_errors.select(&:is_error?)
       end
     end
   end

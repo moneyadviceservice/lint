@@ -1,6 +1,8 @@
 module Mas
   module Lint
     class ErrorMessage
+
+      ERROR_IDENTIFIER = 'error'
       attr_reader :type, :line, :col, :message, :evidence, :hint, :browsers, :file_path
 
       def self.from_collection(collection, parser)
@@ -16,6 +18,10 @@ module Mas
         @evidence  = parser.evidence
         @hint      = parser.hint
         @browsers  = parser.browsers
+      end
+
+      def is_error?
+        @type == ERROR_IDENTIFIER
       end
     end
   end

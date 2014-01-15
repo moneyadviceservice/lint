@@ -22,7 +22,7 @@ describe Mas::Lint::CssErrorFormater do
   let(:error_message) { Mas::Lint::ErrorMessage.new(parser.parse(raw_error)) }
   let(:formater)      { Mas::Lint:: CssErrorFormater.new}
   it 'format nicely errors' do
-    message = "#{error_message.file_path}:1:2\n\tbody {\nError: Rule is empty.\nHint: Rules without any properties specified should be removed.\nAffected browsers: All"
+    message = "#{error_message.file_path}:1:2\n\tbody {\nWarning: Rule is empty.\nHint: Rules without any properties specified should be removed.\nAffected browsers: All"
     expect(formater.format([error_message])).to eq([message])
 
   end

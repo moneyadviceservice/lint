@@ -19,7 +19,7 @@ module Mas
       end
 
       def message(error)
-        "Error: #{error.message}"
+        "#{error.type.capitalize}: #{error.message}"
       end
 
       def evidence(error)
