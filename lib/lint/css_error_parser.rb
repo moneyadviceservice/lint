@@ -1,5 +1,4 @@
 module Lint
-
   class CssErrorParser
 
     def parse(raw_errors)
@@ -18,5 +17,4 @@ module Lint
     end
 
   end
-
 end

@@ -33,9 +33,12 @@ module Lint
     end
 
     def hint
+      # noop
     end
 
     def browsers
+      # noop
     end
+
   end
 end

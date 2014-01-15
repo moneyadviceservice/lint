@@ -74,5 +74,6 @@ module Lint
     def file_extension
       @file_extension ||= File.extname(@file).gsub('.', '')
     end
+
   end
 end

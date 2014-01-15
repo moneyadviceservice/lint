@@ -22,5 +22,6 @@ module Lint
     def is_error?
       @type == ERROR_IDENTIFIER
     end
+
   end
 end

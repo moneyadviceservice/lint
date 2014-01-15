@@ -2,35 +2,36 @@ module Lint
   class Errors
 
     def initialize(parser, formater)
-      @_parser   = parser
-      @_formater = formater
-      @_errors   = []
+      @parser   = parser
+      @formater = formater
+      @errors   = []
     end
 
     def empty?
-      _errors.empty?
+      errors.empty?
     end
 
     def parse!(result)
-      @_errors = ErrorMessage.from_collection(result, _parser)
+      @errors = ErrorMessage.from_collection(result, parser)
     end
 
     def full_messages
-      _formater.format(_errors)
+      formater.format(errors)
     end
 
     private
 
-    def _parser
-      @_parser
+    def parser
+      @parser
     end
 
-    def _formater
-      @_formater
+    def formater
+      @formater
     end
 
-    def _errors
-      @_errors.select(&:is_error?)
+    def errors
+      @errors.select(&:is_error?)
     end
+
   end
 end

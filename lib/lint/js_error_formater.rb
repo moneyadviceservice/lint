@@ -1,5 +1,4 @@
 module Lint
-
   class JsErrorFormater
 
     def format(errors)
@@ -9,6 +8,7 @@ module Lint
     end
 
     private
+
     def file_line_col(error)
       [error.file_path, error.line, error.col].join(':')
     end
@@ -24,6 +24,6 @@ module Lint
     def hint(error)
       "Hint: #{error.hint}" unless error.hint.nil?
     end
-  end
 
+  end
 end
