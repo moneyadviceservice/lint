@@ -1,4 +1,4 @@
-module Linter
+module Lint
   class JsErrorMessageParser
 
     attr_reader :file

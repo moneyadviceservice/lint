@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Linter::ErrorMessage do
+describe Lint::ErrorMessage do
   let(:raw_error) do
     {
      "type"    => "warning",
@@ -17,8 +17,8 @@ describe Linter::ErrorMessage do
     }
   end
   let(:file)   { File.new('spec/fixtures/errors.css') }
-  let(:parser) { Linter::CssErrorMessageParser.new(file) }
-  let(:error)  { Linter::ErrorMessage.new(parser.parse(raw_error)) }
+  let(:parser) { Lint::CssErrorMessageParser.new(file) }
+  let(:error)  { Lint::ErrorMessage.new(parser.parse(raw_error)) }
 
   describe "properties" do
 
@@ -62,8 +62,8 @@ describe Linter::ErrorMessage do
 
   describe '.build' do
     it 'return an array of ErrorMessage instances' do
-      collection = Linter::ErrorMessage.from_collection([raw_error], parser)
-      expect(collection.first).to be_an_instance_of(Linter::ErrorMessage)
+      collection = Lint::ErrorMessage.from_collection([raw_error], parser)
+      expect(collection.first).to be_an_instance_of(Lint::ErrorMessage)
     end
   end
 end

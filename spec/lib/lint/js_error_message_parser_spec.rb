@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Linter::JsErrorMessageParser do
-  let(:parser) { Linter::JsErrorMessageParser.new(File.open('spec/fixtures/errors.js')) }
+describe Lint::JsErrorMessageParser do
+  let(:parser) { Lint::JsErrorMessageParser.new(File.open('spec/fixtures/errors.js')) }
   let(:raw_error) do
     {
      "id"        => "(error)",

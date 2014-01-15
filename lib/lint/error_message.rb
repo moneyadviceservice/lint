@@ -1,4 +1,4 @@
-module Linter
+module Lint
   class ErrorMessage
 
     ERROR_IDENTIFIER = 'error'

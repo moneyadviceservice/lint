@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Linter::CssErrorFormater do
+describe Lint::CssErrorFormater do
   let(:css_file) { File.open('spec/fixtures/errors.js') }
-  let(:parser)   { Linter::CssErrorMessageParser.new(css_file)}
+  let(:parser)   { Lint::CssErrorMessageParser.new(css_file)}
   let(:raw_error) do
     {
      "type"    => "warning",
@@ -19,8 +19,8 @@ describe Linter::CssErrorFormater do
     }
   end
 
-  let(:error_message) { Linter::ErrorMessage.new(parser.parse(raw_error)) }
-  let(:formater)      { Linter::CssErrorFormater.new}
+  let(:error_message) { Lint::ErrorMessage.new(parser.parse(raw_error)) }
+  let(:formater)      { Lint::CssErrorFormater.new}
   it 'format nicely errors' do
     message = "#{error_message.file_path}:1:2\n\tbody {\nWarning: Rule is empty.\nHint: Rules without any properties specified should be removed.\nAffected browsers: All"
     expect(formater.format([error_message])).to eq([message])

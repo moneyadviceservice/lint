@@ -1,4 +1,4 @@
-module Linter
+module Lint
   class CssErrorMessageParser
     attr_reader :file
     def initialize(file)

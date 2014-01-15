@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'linter/version'
+require 'lint/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "linter"
-  spec.version       = Linter::VERSION
+  spec.version       = Lint::VERSION
   spec.authors       = ["StupidCodeFactory"]
   spec.email         = ["ymarquet@gmail.com"]
   spec.description   = %q{Programmatically lint your css and js files}
-  spec.summary       = %q{linter gems aims at providing a comviniante way of using JSLint and CSSLint from within your ruby application}
+  spec.summary       = %q{lint gem aims at providing a comviniante way of using JSLint and CSSLint from within your ruby application}
   spec.homepage      = "https://github.com/moneyadviceservice/lint"
   spec.license       = "MIT"
 

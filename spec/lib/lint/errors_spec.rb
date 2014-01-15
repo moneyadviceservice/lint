@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe Linter::Errors do
-  let(:parser)   { Linter::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
-  let(:formater) { Linter::CssErrorFormater.new }
-  let(:errors)   { Linter::Errors.new(parser, formater) }
+describe Lint::Errors do
+  let(:css_file) { 'spec/fixtures/errors.css' }
+  let(:parser)   { Lint::CssErrorMessageParser.new(File.open(css_file)) }
+  let(:formater) { Lint::CssErrorFormater.new }
+  let(:errors)   { Lint::Errors.new(parser, formater) }
   let(:raw_errors) do
     [
       {
@@ -50,7 +51,7 @@ describe Linter::Errors do
     describe "When warnings are also returned by the linter" do
       it 'does not include the warnings' do
         errors.parse!(raw_errors)
-        expect(errors.full_messages).to eq(["/Users/ymarquet/moneyadvice/mas-lint/spec/fixtures/errors.css:2:11\n\t    width:;\nError: Unexpected token ';' at line 2, col 11.\nHint: This rule looks for recoverable syntax errors.\nAffected browsers: All"])
+        expect(errors.full_messages).to eq(["#{File.absolute_path(parser.file)}:2:11\n\t    width:;\nError: Unexpected token ';' at line 2, col 11.\nHint: This rule looks for recoverable syntax errors.\nAffected browsers: All"])
       end
     end
   end

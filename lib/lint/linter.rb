@@ -1,5 +1,5 @@
-module Linter
-  class Lint
+module Lint
+  class Linter
 
     attr_reader :file
 
@@ -55,8 +55,8 @@ module Linter
 
     def parser
       case file_extension
-      when 'js'  then Mas::Lint::JsErrorMessageParser.new(file)
-      when 'css' then Mas::Lint::CssErrorMessageParser.new(file)
+      when 'js'  then Lint::JsErrorMessageParser.new(file)
+      when 'css' then Lint::CssErrorMessageParser.new(file)
       else
         raise ArgumentError, "Don't know how to parse linting errors for #{file_extension} file"
       end
@@ -64,8 +64,8 @@ module Linter
 
     def formater
       case file_extension
-      when 'js'  then Mas::Lint::JsErrorFormater.new
-      when 'css' then Mas::Lint::CssErrorFormater.new
+      when 'js'  then Lint::JsErrorFormater.new
+      when 'css' then Lint::CssErrorFormater.new
       else
         raise ArgumentError, "Don't know how to formate linting errors for #{file_extension} file"
       end

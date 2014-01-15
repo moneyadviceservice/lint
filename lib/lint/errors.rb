@@ -1,6 +1,5 @@
-module Linter
+module Lint
   class Errors
-    extend Forwardable
 
     def initialize(parser, formater)
       @_parser   = parser

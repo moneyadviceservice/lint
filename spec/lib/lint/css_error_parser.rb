@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Linter::CssErrorParser do
+describe Lint::CssErrorParser do
   let(:raw_errors) do
     [
       {
@@ -30,7 +30,7 @@ describe Linter::CssErrorParser do
       }
     ]
   end
-  let(:parser) { Linter::CssErrorParser.new(raw_errors) }
+  let(:parser) { Lint::CssErrorParser.new(raw_errors) }
 
   it 'should parse CSSLint errors' do
     parser.parse!(raw_errors)
