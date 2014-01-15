@@ -4,8 +4,9 @@ module Mas
       extend Forwardable
 
       def initialize(parser, formater)
-        @_parser = parser
-        @_errors = []
+        @_parser   = parser
+        @_formater = formater
+        @_errors   = []
       end
 
       def empty?
@@ -17,13 +18,17 @@ module Mas
       end
 
       def full_messages
-        _errors.map(&:to_message)
+        _formater.format(_errors)
       end
 
       private
 
       def _parser
         @_parser
+      end
+
+      def _formater
+        @_formater
       end
 
       def _errors

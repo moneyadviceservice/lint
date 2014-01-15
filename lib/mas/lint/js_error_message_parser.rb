@@ -32,6 +32,12 @@ module Mas
       def evidence
         @raw_error['evidence']
       end
+
+      def hint
+      end
+
+      def browsers
+      end
     end
   end
 end

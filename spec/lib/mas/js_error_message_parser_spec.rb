@@ -21,7 +21,7 @@ describe Mas::Lint::JsErrorMessageParser do
     end
 
     it 'has a type' do
-      expect(parser.type).to eq('(error)')
+      expect(parser.type).to eq('error')
     end
 
     it 'has a line' do

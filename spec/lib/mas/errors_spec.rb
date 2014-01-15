@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Mas::Lint::Errors do
-  let(:parser)   { Mas::Lint::CssErrorParser.new }
+  let(:parser)   { Mas::Lint::CssErrorMessageParser.new(File.open('spec/fixtures/errors.css')) }
   let(:formater) { Mas::Lint::CssErrorFormater.new }
-  let(:errors)   { Mas::Lint::Errors.new(File.new('spec/fixtures/errors.css'), parser, formater) }
+  let(:errors)   { Mas::Lint::Errors.new(parser, formater) }
   let(:raw_errors) do
     [
       {
@@ -33,12 +33,18 @@ describe Mas::Lint::Errors do
       }
     ]
   end
-  let(:linter_result) { CSSLint::Result.new(raw_errors) }
 
-  describe "When not error messages are return from a result" do
+  describe "When not error messages are returned from a result" do
     it "does not have any errors messages" do
-      errors.parse!(linter_result)
+      errors.parse!([])
       expect(errors.full_messages).to be_empty
+    end
+  end
+
+  describe "When error messages are returned from a result" do
+    it "does not have any errors messages" do
+      errors.parse!(raw_errors)
+      expect(errors.full_messages).not_to be_empty
     end
   end
 

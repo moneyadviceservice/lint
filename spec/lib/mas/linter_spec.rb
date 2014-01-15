@@ -34,7 +34,8 @@ describe Mas::Lint::Linter do
       end
 
       it 'has errors' do
-        expect(linter.errors.full_messages).to eq(['an error'])
+        linter.valid?
+        expect(linter.errors.full_messages).not_to be_empty
       end
     end
   end
@@ -73,7 +74,7 @@ describe Mas::Lint::Linter do
 
       it 'has errors' do
         linter.valid?
-        expect(linter.errors.full_messages).to eq(['an error'])
+        expect(linter.errors.full_messages).not_to be_empty
       end
     end
   end

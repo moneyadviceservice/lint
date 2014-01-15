@@ -22,7 +22,6 @@ module Mas
       def run!
         file.rewind
         result = linter.context.call(linter_function, file.read, {})
-        puts result.inspect
         errors.parse!(result.last)
       end
 
@@ -54,7 +53,12 @@ module Mas
       end
 
       def formater
-        # raise NoMethodError, "Must implement: #{self.class}#formater"
+        case file_extension
+        when 'js'  then Mas::Lint::JsErrorFormater.new
+        when 'css' then Mas::Lint::CssErrorFormater.new
+        else
+          raise ArgumentError, "Don't know how to formate linting errors for #{file_extension} file"
+        end
       end
 
       def file_extension
