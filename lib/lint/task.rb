@@ -4,6 +4,7 @@ module Lint
 
   class Task < Sprockets::Rails::Task
     def define
+      super
       namespace :assets do
         desc 'Linting for css and Js files'
         task lint: :environment do

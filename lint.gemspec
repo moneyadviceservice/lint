@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'lint/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "linter"
+  spec.name          = "lint"
   spec.version       = Lint::VERSION
   spec.authors       = ["StupidCodeFactory"]
   spec.email         = ["ymarquet@gmail.com"]
