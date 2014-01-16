@@ -5,7 +5,7 @@ module Lint
     attr_reader :type, :line, :col, :message, :evidence, :hint, :browsers, :file_path
 
     def self.from_collection(collection, parser)
-      collection.map { |e| new(parser.parse(e)) }
+      collection.compact.map { |e| new(parser.parse(e)) }
     end
 
     def initialize(parser)

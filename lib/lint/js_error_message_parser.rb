@@ -13,7 +13,11 @@ module Lint
     end
 
     def type
-      @raw_error['id'].gsub(/\(|\)/, '')
+      if !@raw_error['id'].nil?
+        @raw_error['id'].gsub(/\(|\)/, '')
+      else
+        'error'
+      end
     end
 
     def line

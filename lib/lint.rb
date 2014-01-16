@@ -16,6 +16,9 @@ module Lint
   class Railtie < ::Rails::Engine
     rake_tasks do |app|
       Lint::Task.new app
+      Rake::Task['assets:precompile'].enhance do
+        Rake::Task['assets:lint'].invoke
+      end
     end
   end
 end
