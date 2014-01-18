@@ -71,13 +71,14 @@ module Lint
       status, headers, response = @app.call(env)
       path = unescape(env['PATH_INFO'].to_s.sub(/^\//, ''))
 
-      return [status, headers, response] unless path.present?
+      return [status, headers, response] unless path.present? || response.empty?
 
-      if asset = path_for_asset(path)
+      if asset = path_for_asset(path, env)
 
         return [ status, headers, response ] if is_vendor?(asset)
-        Rails.logger.info response.inspect
-        linter = Lint::Linter.new(virutal_for_asset(asset, path), source: response.body)
+
+        content = response.is_a?(Array) ? response.first || "" : response.body
+        linter = Lint::Linter.new(virutal_for_asset(asset, path), source: content)
         return [ status, headers, response ] if linter.valid?
 
         if File.extname(virutal_for_asset(asset, path)) == '.css'
@@ -97,8 +98,8 @@ module Lint
     private
     attr_reader :assets
 
-    def path_for_asset(path)
-      assets.find_asset(Pathname.new(path).basename)
+    def path_for_asset(path, env)
+      assets.find_asset(Pathname.new(path).basename, bundle: !body_only?(env))
     end
 
     def virutal_for_asset(asset, path)
@@ -116,7 +117,7 @@ module Lint
     isolate_namespace Lint
 
     initializer 'lint.rack_middleware', group: :all do |app|
-      app.middleware.use Lint::RackMiddleware, app.assets
+      app.middleware.insert_before ActionDispatch::Reloader, Lint::RackMiddleware, app.assets
 
       #   byebug
       #   Sprockets.register_postprocessor 'application/javascript', Lint::JSLinter
