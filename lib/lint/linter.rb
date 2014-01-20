@@ -37,8 +37,8 @@ module Lint
 
     def linter_function
       case file_extension
-      when 'js'  then 'JSLINTR'
-      when 'css', 'scss' then 'CSSLINTR'
+      when 'js'  then 'JSHINTER'
+      when 'css' then 'CSSLINTR'
       else
         raise ArgumentError, "Don't know the linter function to call for #{file_extension} file"
       end
@@ -46,8 +46,8 @@ module Lint
 
     def linter
       case file_extension
-      when 'js'  then JSLint
-      when 'css', 'scss' then CSSLint
+      when 'js'  then JshintRuby
+      when 'css' then CSSLint
       else
         raise ArgumentError, "Don't know how to lint #{file_extension} file"
       end
@@ -56,7 +56,7 @@ module Lint
     def parser
       case file_extension
       when 'js'  then Lint::JsErrorMessageParser.new(file)
-      when 'css', 'scss' then Lint::CssErrorMessageParser.new(file)
+      when 'css' then Lint::CssErrorMessageParser.new(file)
       else
         raise ArgumentError, "Don't know how to parse linting errors for #{file_extension} file"
       end
@@ -65,7 +65,7 @@ module Lint
     def formater
       case file_extension
       when 'js'  then Lint::JsErrorFormater.new
-      when 'css', 'scss' then Lint::CssErrorFormater.new
+      when 'css' then Lint::CssErrorFormater.new
       else
         raise ArgumentError, "Don't know how to formate linting errors for #{file_extension} file"
       end

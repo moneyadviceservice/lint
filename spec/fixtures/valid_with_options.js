@@ -2,9 +2,9 @@ var Foo = {};
 (function (namespace) {
     "use strict";
 
-    var truthy = true;
-    if (truthy == true) {
-        return 'truthy';
+    var nully = null;
+    if (nully == null) {
+        return 'nully';
     }
 
     namespace.bar = function () {

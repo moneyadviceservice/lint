@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "execcsslint"
-  spec.add_dependency "execjslint"
+  spec.add_dependency "jshint_ruby"
   spec.add_dependency "rails"
   spec.add_dependency "nokogiri"
 
