@@ -2,9 +2,6 @@ js:
   eqnull: true
 
 css:
-  errors:
-
-  warnings:
   ignore:
     - known-properties
     - box-sizing

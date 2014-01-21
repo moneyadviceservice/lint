@@ -4,6 +4,13 @@ describe Lint::Linter do
 
   let(:linter_yml) { YAML.load_file('spec/fixtures/linter.yml') }
 
+  let!(:configure) do
+    Lint::Linter.configure do |config|
+      config.csslint_rules = linter_yml['css']
+      config.jshint_rules  = linter_yml['js']
+    end
+  end
+
   describe 'When linting a js file' do
 
     describe 'When provided an options file for linting rules' do
@@ -11,7 +18,7 @@ describe Lint::Linter do
       let(:js_file) { File.open('spec/fixtures/valid_with_options.js') }
 
       it 'configures JSLint properly' do
-        expect(Lint::Linter.new(js_file, linter_yml)).to be_valid
+        expect(Lint::Linter.new(js_file)).to be_valid
       end
 
     end
@@ -59,7 +66,7 @@ describe Lint::Linter do
       let(:css_file) { File.open('spec/fixtures/valid_with_options.css') }
 
       it 'configures CSSLint properly' do
-        expect(Lint::Linter.new(css_file, linter_yml)).to be_valid
+        expect(Lint::Linter.new(css_file)).to be_valid
       end
 
     end

@@ -21,13 +21,16 @@ describe Lint::RackMiddleware do
     let(:inner_app) do
       lambda do |env|
         [
-         200,
-         {'Content-Type' => 'text/javascripts'},
-         Rack::BodyProxy.new(valid_js) {}
+          200,
+          {'Content-Type' => 'text/javascripts'},
+          Rack::BodyProxy.new(valid_js) {}
         ]
       end
     end
     let(:app) { Lint::RackMiddleware.new(inner_app, env)}
+
+    before do
+    end
 
     it 'serves assets normally' do
       get '/app.js'
@@ -40,9 +43,9 @@ describe Lint::RackMiddleware do
     let(:inner_app) do
       lambda do |env|
         [
-         200,
-         {'Content-Type' => 'text/javascripts'},
-         Rack::BodyProxy.new(invalid_js) {}
+          200,
+          {'Content-Type' => 'text/javascripts'},
+          Rack::BodyProxy.new(invalid_js) {}
         ]
       end
     end

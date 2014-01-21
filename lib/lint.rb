@@ -38,8 +38,9 @@ module Lint
       if asset = path_for_asset(path, env)
         return not_modified_response(asset, env) if etag_match?(asset, env)
         return [ status, headers, response ]     if is_vendor?(asset)
+        return [ status, headers, response ]     if !['.js', '.css'].include?(File.extname(asset.logical_path))
 
-        linter = Lint::Linter.new(virutal_for_asset(asset, path), source: response.body)
+        linter = Lint::Linter.new(virutal_for_asset(asset, path), response.body)
         return [ status, headers, response ] if linter.valid?
 
         if File.extname(virutal_for_asset(asset, path)) == '.css'
@@ -77,7 +78,7 @@ module Lint
     isolate_namespace Lint
 
     initializer 'lint.rack_middleware', group: :all do |app|
-      app.middleware.use Lint::RackMiddleware, app.assets
+      app.middleware.use(Lint::RackMiddleware, app.assets)
     end
 
     rake_tasks do |app|
@@ -86,3 +87,5 @@ module Lint
   end
 
 end
+
+Lint::Linter.configure

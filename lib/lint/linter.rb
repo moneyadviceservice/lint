@@ -1,20 +1,40 @@
 module Lint
+
+  class Configuration
+    attr_accessor :csslint_rules, :jshint_rules
+
+    #TODO: eventually set sensible defaults
+    def initialize
+      @csslint_rules = {}
+      @jshint_rules  = {}
+    end
+  end
+
   class Linter
 
     attr_reader :file
 
-    def initialize(file, options = {})
-      @file = file
-      @source = options[:source]
+    class << self
+      attr_accessor :configuration
+    end
+
+    def self.configure
+      self.configuration ||= Configuration.new
+      yield(self.configuration) if block_given?
+    end
+
+    def initialize(file, source = nil)
+      @file    = file
+      @source  = source
       @options = if file_extension == 'css'
-                   opts = {}
-                   opts['errors']   = options['errors'].join(',')   if options.key?('errors')
-                   opts['warnings'] = options['warnings'].join(',') if options.key?('warnings')
-                   opts['ignore']   = options['ignore'].join(',')   if options.key?('ignore')
-                   opts['errors'] = 'important'
-                 else
-                   options[file_extension] || {}
-                 end
+        css_options             = self.class.configuration.csslint_rules.clone
+        css_options['errors']   = (css_options['errors']   || []).join(',') if css_options.key?('errors')
+        css_options['warnings'] = (css_options['warnings'] || []).join(',') if css_options.key?('warnings')
+        css_options['ignore']   = (css_options['ignore']   || []).join(',') if css_options.key?('ignore')
+        css_options
+      else
+        self.class.configuration.jshint_rules
+      end
     end
 
     def valid?

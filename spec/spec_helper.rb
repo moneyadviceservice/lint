@@ -14,4 +14,5 @@ RSpec.configure do |config|
   config.include(SprocketsSupport)
   config.include(Rack::Test::Methods)
   config.order = 'random'
+
 end
