@@ -28,9 +28,8 @@ module Lint
       @source  = source
       @options = if file_extension == 'css'
         css_options             = self.class.configuration.csslint_rules.clone
-        css_options['errors']   = (css_options['errors']   || []).join(',') if css_options.key?('errors')
-        css_options['warnings'] = (css_options['warnings'] || []).join(',') if css_options.key?('warnings')
-        css_options['ignore']   = (css_options['ignore']   || []).join(',') if css_options.key?('ignore')
+        css_options['errors']   = (css_options['errors']   || []) if css_options.key?('errors')
+        css_options['warnings'] = (css_options['warnings'] || []) if css_options.key?('warnings')
         css_options
       else
         self.class.configuration.jshint_rules
@@ -57,8 +56,8 @@ module Lint
 
     def linter_function
       case file_extension
-      when 'js'  then 'JSHINTER'
-      when 'css' then 'CSSLINTR'
+      when 'js', 'coffee' then 'JSHINTER'
+      when 'css','scss'   then 'CSSLINTER'
       else
         raise ArgumentError, "Don't know the linter function to call for #{file_extension} file"
       end
@@ -66,8 +65,8 @@ module Lint
 
     def linter
       case file_extension
-      when 'js'  then JshintRuby
-      when 'css' then CSSLint
+      when 'js', 'coffee' then JshintRuby
+      when 'css', 'scss'  then CsslintRuby
       else
         raise ArgumentError, "Don't know how to lint #{file_extension} file"
       end
@@ -75,8 +74,8 @@ module Lint
 
     def parser
       case file_extension
-      when 'js'  then Lint::JsErrorMessageParser.new(file)
-      when 'css' then Lint::CssErrorMessageParser.new(file)
+      when 'js', 'coffee' then Lint::JsErrorMessageParser.new(file)
+      when 'css', 'scss'  then Lint::CssErrorMessageParser.new(file)
       else
         raise ArgumentError, "Don't know how to parse linting errors for #{file_extension} file"
       end
@@ -84,8 +83,8 @@ module Lint
 
     def formater
       case file_extension
-      when 'js'  then Lint::JsErrorFormater.new
-      when 'css' then Lint::CssErrorFormater.new
+      when 'js', 'coffee'  then Lint::JsErrorFormater.new
+      when 'css', 'scss'  then Lint::CssErrorFormater.new
       else
         raise ArgumentError, "Don't know how to formate linting errors for #{file_extension} file"
       end

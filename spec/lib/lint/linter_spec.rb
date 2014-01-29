@@ -29,7 +29,7 @@ describe Lint::Linter do
       let(:js_file) { File.open('spec/fixtures/valid.js') }
 
       it 'runs the JSLint linter' do
-        pending("No idead why the expection is not met")
+        pending("No idea why the expectation is not met")
         expect(JSLint.context).to receive(:call).with('JSLINTR', File.open('spec/fixtures/valid.js').read, {})
         linter.valid?
       end
@@ -77,7 +77,7 @@ describe Lint::Linter do
       let(:css_file) { File.open('spec/fixtures/valid.css') }
 
       it 'runs the CSSLint linter' do
-        pending("No idead why the expection is not met")
+        pending("No idead why the expectation is not met")
         expect(CSSLint.context).to receive(:call).with('CSSLINTR', File.open('spec/fixtures/valid.css').read, {}).and_call_original
         linter.valid?
       end

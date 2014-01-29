@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "execcsslint"
+  spec.add_dependency "csslint_ruby"
   spec.add_dependency "jshint_ruby"
   spec.add_dependency "rails"
   spec.add_dependency "nokogiri"
