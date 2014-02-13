@@ -33,13 +33,17 @@ module Lint
     def evaluate(context, locals, &block)
       return data if is_vendor_assets?
 
-      linter = Lint::Linter.new(file, data)
+      linter = linter_klass.new(file, data)
       return data if linter.valid?
 
       raise StandardError.new(linter.errors.full_messages.join("\n"))
     end
 
     private
+
+    def linter_klass
+      Lint::Linter
+    end
 
     def is_vendor_assets?
       !!(file.match(/vendor/))
@@ -48,92 +52,31 @@ module Lint
 
   class JSLinter < AssetLinter
     self.default_mime_type = 'application/javascript'
+
+    private
+    def linter_klass
+      Lint::Js
+    end
   end
 
   class CSSLinter < AssetLinter
     self.default_mime_type = 'text/css'
-  end
-
-
-  class RackMiddleware
-
-    include Sprockets::Server
-
-    def initialize(app, assets)
-      @app           = app
-      @assets        = assets
-    end
-
-    def call(env)
-      dup._call(env)
-    end
-
-    def _call(env)
-      status, headers, response = @app.call(env)
-      path = unescape(env['PATH_INFO'].to_s.sub(/^\//, ''))
-
-      return [status, headers, response] unless path.present?
-
-      if asset = path_for_asset(path, env)
-        return not_modified_response(asset, env) if etag_match?(asset, env)
-        return [ status, headers, response ]     if is_vendor?(asset)
-        return [ status, headers, response ]     if !['.js', '.css'].include?(File.extname(asset.logical_path))
-
-        linter = Lint::Linter.new(virutal_for_asset(asset, path), response.body)
-        return [ status, headers, response ] if linter.valid?
-
-        if File.extname(virutal_for_asset(asset, path)) == '.css'
-          e = StandardError.new("Asset compilation error")
-          e.set_backtrace(linter.errors.full_messages)
-
-          return css_exception_response(e)
-        else
-          e = StandardError.new(linter.errors.full_messages.join("\n"))
-          return javascript_exception_response(e)
-        end
-      else
-        [ status, headers, response ]
-      end
-    end
 
     private
-    attr_reader :assets
-
-    def path_for_asset(path, env)
-      assets.find_asset(Pathname.new(path).basename, bundle: !body_only?(env))
-    end
-
-    def virutal_for_asset(asset, path)
-      asset.pathname.split.first.join(path)
-    end
-
-    def is_vendor?(asset)
-      !asset.pathname.to_s.match(Regexp.new(Rails.root.join('app', 'assets').to_s))
+    def linter_klass
+      Lint::Css
     end
   end
+
 
   class Railtie < ::Rails::Engine
 
     isolate_namespace Lint
 
     initializer 'lint.rack_middleware', group: :all do |app|
-      app.middleware.insert_before ActionDispatch::Reloader, Lint::RackMiddleware, app.assets
-
-
-      app.assets.register_postprocessor 'application/javascript', Lint::JSLinter
-      app.assets.register_postprocessor 'text/css', Lint::CSSLinter
       app.assets.register_engine '.js', Lint::JSLinter
       app.assets.register_engine '.css', Lint::CSSLinter
     end
-
-    # config.assets.configure do |env|
-    #   env.register_postprocessor 'application/javascript', Lint::JSLinter
-    #   env.register_postprocessor 'text/css', Lint::CSSLinter
-    #   env.register_engine '.js', Lint::JSLinter
-    #   env.register_engine '.css', Lint::CSSLinter
-    #   env.logger = Rails.logger
-    #   app.middleware.use(Lint::RackMiddleware, app.assets)
-    # end
 
     rake_tasks do |app|
       Lint::Task.new app
@@ -141,5 +84,3 @@ module Lint
   end
 
 end
-
-Lint::Linter.configure

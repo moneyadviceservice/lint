@@ -2,38 +2,60 @@ module Lint
 
   class Configuration
     attr_accessor :csslint_rules, :jshint_rules
+    attr_reader   :css_file_extensions, :js_file_extensions
 
-    #TODO: eventually set sensible defaults
     def initialize
-      @csslint_rules = {}
-      @jshint_rules  = {}
+      @csslint_rules       = {}
+      @jshint_rules        = {}
+      @css_file_extensions = []
+      @js_file_extensions  = []
     end
   end
 
   class Linter
 
+    CSS_EXTENSIONS = ['.css', '.scss', '.sass', '.less']
+    JS_EXTENSIONS  = ['.js', '.coffee']
+
     attr_reader :file
 
     class << self
       attr_accessor :configuration
-    end
 
-    def self.configure
-      self.configuration ||= Configuration.new
-      yield(self.configuration) if block_given?
+      def configure
+        self.configuration ||= Configuration.new
+        yield(self.configuration) if block_given?
+      end
+
+      def for(file)
+        basename = File.basename(file)
+        return Css.new(file) if is_css?(basename)
+        return Js.new(file)  if is_js?(basename)
+      end
+
+      private
+
+      def is_css?(filename)
+        !!available_css_extensions.detect {|ext| filename.match(Regexp.escape(ext)) }
+      end
+
+      def is_js?(filename)
+        !!available_js_extensions.detect {|ext| filename.match(Regexp.escape(ext)) }
+      end
+
+      def available_css_extensions
+        CSS_EXTENSIONS + configuration.css_file_extensions
+      end
+
+      def available_js_extensions
+        JS_EXTENSIONS + configuration.js_file_extensions
+      end
     end
 
     def initialize(file, source = nil)
       @file    = file
       @source  = source
-      @options = if file_extension == 'css'
-        css_options             = self.class.configuration.csslint_rules.clone
-        css_options['errors']   = (css_options['errors']   || []) if css_options.key?('errors')
-        css_options['warnings'] = (css_options['warnings'] || []) if css_options.key?('warnings')
-        css_options
-      else
-        self.class.configuration.jshint_rules
-      end
+      @options = {}
     end
 
     def valid?
@@ -45,54 +67,86 @@ module Lint
       @errors ||= Errors.new(parser, formater)
     end
 
+    def linter_function
+      raise NoMethodError.new("#{self.class} must implement #linter_function")
+    end
+
+    def linter
+      raise NoMethodError.new("#{self.class} must implement #linter")
+    end
+
+    def parser
+      raise NoMethodError.new("#{self.class} must implement #parser")
+    end
+
+    def formater
+      raise NoMethodError.new("#{self.class} must implement #formater")
+    end
+
+
     private
 
     attr_reader :options
 
     def run!
+      # Rails.logger.info options
       result = linter.context.call(linter_function, @source || (file.rewind && file.read), options)
       errors.parse!(result.last)
-    end
-
-    def linter_function
-      case file_extension
-      when 'js', 'coffee' then 'JSHINTER'
-      when 'css','scss'   then 'CSSLINTER'
-      else
-        raise ArgumentError, "Don't know the linter function to call for #{file_extension} file"
-      end
-    end
-
-    def linter
-      case file_extension
-      when 'js', 'coffee' then JshintRuby
-      when 'css', 'scss'  then CsslintRuby
-      else
-        raise ArgumentError, "Don't know how to lint #{file_extension} file"
-      end
-    end
-
-    def parser
-      case file_extension
-      when 'js', 'coffee' then Lint::JsErrorMessageParser.new(file)
-      when 'css', 'scss'  then Lint::CssErrorMessageParser.new(file)
-      else
-        raise ArgumentError, "Don't know how to parse linting errors for #{file_extension} file"
-      end
-    end
-
-    def formater
-      case file_extension
-      when 'js', 'coffee'  then Lint::JsErrorFormater.new
-      when 'css', 'scss'  then Lint::CssErrorFormater.new
-      else
-        raise ArgumentError, "Don't know how to formate linting errors for #{file_extension} file"
-      end
     end
 
     def file_extension
       @file_extension ||= File.extname(@file).gsub('.', '')
     end
 
+
   end
+
+  class Css < Linter
+    def initialize(*args)
+      super
+      @options = Lint::Linter.configuration.csslint_rules
+    end
+
+    def linter_function
+      'CSSLINTER'
+    end
+
+    def linter
+      CsslintRuby
+    end
+
+    def parser
+      Lint::CssErrorMessageParser.new(file)
+    end
+
+    def formater
+      Lint::CssErrorFormater.new
+    end
+
+  end
+
+  class Js < Linter
+    def initialize(*args)
+      super
+      @options = Lint::Linter.configuration.jshint_rules
+    end
+
+    def linter_function
+      'JSHINTER'
+    end
+
+    def linter
+      JshintRuby
+    end
+
+    def parser
+      Lint::JsErrorMessageParser.new(file)
+    end
+
+    def formater
+      Lint::JsErrorFormater.new
+    end
+  end
+
+
 end
