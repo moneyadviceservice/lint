@@ -1,0 +1,8 @@
+js:
+  eqnull: true
+
+css:
+  ignore:
+    - known-properties
+    - box-sizing
+    - important
